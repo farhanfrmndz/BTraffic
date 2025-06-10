@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BTraffic</title>
+  <meta name="description" content="Monitoring lalu lintas perangkat BLE secara real-time menggunakan Firebase dan visualisasi Chart.js.">
+  
+  <!-- Fonts & CSS -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Firebase & Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+</head>
+
+<body>
+  <!-- Header -->
+  <header>
+    <img src="images/btlogo.png" alt="Logo BTraffic" class="logo" />
+    <div class="menu-container">
+      <button class="menu-button" onclick="toggleMenu()">☰</button>
+      <div class="menu-dropdown" id="menuDropdown">
+        <button onclick="showTab('dashboard')">Dashboard</button>
+        <button onclick="showTab('history')">Riwayat</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <!-- Dashboard -->
+    <section id="dashboard" class="tab active">
+      <div class="card">
+        <h2>Traffic Monitor</h2>
+        <p>Jumlah Perangkat: <strong id="deviceCount">0</strong></p>
+        <p>Status: <strong id="kepadatan">-</strong></p>
+        <canvas id="deviceChart" height="100"></canvas>
+      </div>
+    </section>
+
+    <!-- History -->
+    <section id="history" class="tab">
+      <div class="card">
+        <h2>Riwayat Log</h2>
+        <div id="logList" class="log-list">Memuat data...</div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 BTraffic</p>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCuHleQRHw7HbHYir6TEK2n9sHSvgkEVzQ",
+      databaseURL: "https://btraffic-c2e4a-default-rtdb.asia-southeast1.firebasedatabase.app"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const deviceCountEl = document.getElementById("deviceCount");
+    const kepadatanEl = document.getElementById("kepadatan");
+    const logList = document.getElementById("logList");
+
+    db.ref("traffic/devices").on("value", snap => {
+      deviceCountEl.textContent = snap.val();
+    });
+
+    db.ref("traffic/kepadatan").on("value", snap => {
+      kepadatanEl.textContent = snap.val();
+    });
+
+    let deviceChart;
+
+    db.ref("traffic/logs").on("value", snapshot => {
+      const logs = snapshot.val() || {};
+      const keys = Object.keys(logs).sort().reverse(); // Urutkan dari terbaru
+
+      logList.innerHTML = "";
+      const labels = [], deviceData = [];
+
+      keys.slice(0, 100).forEach((key, index) => {
+        const log = logs[key];
+
+        const date = new Date(
+          `${key.slice(0, 4)}-${key.slice(4, 6)}-${key.slice(6, 8)}T${key.slice(9, 11)}:${key.slice(11, 13)}:${key.slice(13, 15)}`
+        );
+
+        const labelFormatted = date.toLocaleTimeString("id-ID", {
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit'
+        });
+
+        const formattedFull = date.toLocaleString("id-ID", {
+          day: '2-digit',
+          month: 'long',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit'
+        });
+
+        const item = document.createElement("div");
+        item.className = "log-item";
+        item.innerHTML = `<strong>${formattedFull}</strong><br>Perangkat: ${log.device_count} | Kepadatan: ${log.kepadatan}`;
+        logList.appendChild(item);
+
+        // Hanya 5 log terakhir untuk grafik
+        if (index < 5) {
+          labels.unshift(labelFormatted);
+          deviceData.unshift(log.device_count);
+        }
+      });
+
+      const ctx = document.getElementById("deviceChart").getContext("2d");
+      if (deviceChart) deviceChart.destroy();
+
+      deviceChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [{
+            label: "Jumlah Perangkat",
+            data: deviceData,
+            borderColor: "#1e90ff",
+            backgroundColor: "#1e90ff33",
+            tension: 0.3,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: { precision: 0 }
+            }
+          }
+        }
+      });
+    });
+
+    function showTab(id) {
+      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      toggleMenu(false);
+    }
+
+    function toggleMenu() {
+      const dropdown = document.getElementById("menuDropdown");
+      dropdown.classList.toggle("show");
+    }
+
+    window.addEventListener("click", function (e) {
+      const dropdown = document.getElementById("menuDropdown");
+      const button = document.querySelector(".menu-button");
+      if (!button.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.remove("show");
+      }
+    });
+  </script>
+</body>
+</html>
