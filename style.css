@@ -26,7 +26,7 @@ body {
 }
 
 h1, h2 {
-  font-family: 'Roboto Slab', serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 /* =============================
@@ -295,5 +295,56 @@ footer {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@media (max-width: 600px) {
+  header {
+    flex-direction: row; /* ubah dari column ke row */
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo {
+    width: auto;
+    max-height: 40px;
+    object-fit: contain;
+  }
+
+  .menu-button {
+    align-self: auto;
+    margin-left: auto;
+  }
+
+  nav {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  nav button {
+    width: 100%;
+    margin: 0.2rem 0;
+  }
+
+  .menu-dropdown {
+    top: 100%;
+    width: 100%;
+  }
+
+  .card {
+    margin-top: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  canvas#deviceChart {
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  footer {
+    margin-top: 150px;
+    font-size: 0.8rem;
+    text-align: center;
   }
 }
