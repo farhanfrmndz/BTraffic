@@ -17,6 +17,8 @@
 </head>
 
 <body>
+  <img src="images/blurry-gradient-haikei.svg" class="svg-bg-decor" alt="background" />
+  
   <!-- Header -->
   <header>
     <img src="images/btlogo.png" alt="Logo BTraffic" class="logo" />
@@ -34,25 +36,29 @@
     <!-- Dashboard -->
     <section id="dashboard" class="tab active">
       <div class="card">
-        <h2>Traffic Monitor</h2>
-        <p>Jumlah Perangkat: <strong id="deviceCount">0</strong></p>
-        <p>Status: <strong id="kepadatan">-</strong></p>
-        <canvas id="deviceChart" height="100"></canvas>
+        <h2 class="card-title">Traffic Monitor</h2>
+        <div class="card-content">
+          <p>Jumlah Perangkat: <strong id="deviceCount">0</strong></p>
+          <p>Status: <strong id="kepadatan">-</strong></p>
+          <canvas id="deviceChart" height="100"></canvas>
+        </div>
       </div>
     </section>
 
     <!-- History -->
     <section id="history" class="tab">
       <div class="card">
-        <h2>Riwayat Log</h2>
-        <div id="logList" class="log-list">Memuat data...</div>
+        <h2 class="card-title">Riwayat</h2>
+        <div class="card-content">
+          <div id="logList" class="log-list">...</div>
+        </div>
       </div>
     </section>
   </main>
 
   <!-- Footer -->
   <footer>
-    <p>© 2025 BTraffic</p>
+    <p>© 2025 BTraffic, Inc.</p>
   </footer>
 
   <!-- JavaScript -->

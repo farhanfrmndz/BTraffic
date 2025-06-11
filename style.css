@@ -16,6 +16,16 @@
 /* =============================
    GLOBAL STYLES
    ============================= */
+.svg-bg-decor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: -1;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
 body {
   margin: 0;
   font-family: 'Poppins', sans-serif;
@@ -186,10 +196,22 @@ main {
 .card {
   background-color: var(--card-bg);
   border-radius: 12px;
-  padding: 1.5rem;
   box-shadow: var(--shadow-medium);
-  margin-bottom: 2rem;
+  overflow: hidden;
+  margin-top: 3rem;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-content {
+  padding: 20px 24px;
+}
+
+.card-title {
+  background-color: #0083fd;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 8px 8px 0 0;
+  margin: 0;
 }
 
 .card:hover {
@@ -214,12 +236,12 @@ main {
 }
 
 .log-item {
-  background-color: var(--hover-bg);
-  padding: 0.8rem 1rem;
-  border-left: 4px solid var(--primary-color);
-  border-radius: 5px;
-  font-size: 0.95rem;
-  animation: fadeIn 0.6s ease;
+  background: #eef3ff;
+  margin: 8px 0;
+  padding: 12px 16px;
+  border-left: 4px solid #0083fd;
+  border-radius: 6px;
+  font-family: 'Poppins', sans-serif;
 }
 
 /* =============================
@@ -229,8 +251,8 @@ footer {
   text-align: center;
   padding: 1rem;
   margin-top: 3rem;
-  background-color: #f0f0f0;
-  color: #777;
+  background-color: #fff;
+  color: #333;
   font-size: 0.9rem;
   animation: fadeIn 1s ease;
 }
